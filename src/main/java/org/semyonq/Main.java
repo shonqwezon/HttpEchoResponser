@@ -21,6 +21,8 @@ public class Main {
             System.out.println("Ошибка подключения к хосту: " + e.getMessage());
         } catch (IOException e) {
             System.out.println("Невозможно прочитать данные: " + e.getMessage());
+        } catch (BadKeyException e) {
+            System.out.println("Ошибка: Ожидались другие данные");
         }
 
         System.out.println("Полученные пользователи:");

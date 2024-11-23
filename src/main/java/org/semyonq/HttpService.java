@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.net.*;
 
 public class HttpService {
+    private final int TIMEOUT_CONNECTION = 5000; // ms
     private final URL url;
 
     public HttpService(String server_address) throws BadURLException {
@@ -22,8 +23,9 @@ public class HttpService {
     }
 
     private boolean isAvailable() throws IOException {
-        HttpURLConnection connection = null;
-        connection = (HttpURLConnection) url.openConnection();
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setConnectTimeout(TIMEOUT_CONNECTION);
+        connection.setReadTimeout(TIMEOUT_CONNECTION);
         connection.setRequestMethod("HEAD");
         return connection.getResponseCode() == HttpURLConnection.HTTP_OK;
     }
@@ -41,7 +43,6 @@ public class HttpService {
 
         String json = response.toString();
         json = json.substring(1, json.length() - 1).trim();
-        json = json.replace("{", "").trim();
         return json.split("},");
     }
 }

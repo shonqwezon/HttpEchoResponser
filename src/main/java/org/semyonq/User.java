@@ -15,66 +15,46 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", company='" + company + '\'' +
-                ", username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                ", address='" + address + '\'' +
-                ", zip='" + zip + '\'' +
-                ", state='" + state + '\'' +
-                ", country='" + country + '\'' +
-                ", phone='" + phone + '\'' +
-                ", photo='" + photo + '\'' +
-                '}';
+        return "User {" +
+                "\n\tid\t\t= " + id +
+                ",\n\tname\t= '" + name + '\'' +
+                ",\n\tcompany\t= '" + company + '\'' +
+                ",\n\tusername= '" + username + '\'' +
+                ",\n\temail\t= '" + email + '\'' +
+                ",\n\taddress\t= '" + address + '\'' +
+                ",\n\tzip\t\t= '" + zip + '\'' +
+                ",\n\tstate\t= '" + state + '\'' +
+                ",\n\tcountry\t= '" + country + '\'' +
+                ",\n\tphone\t= '" + phone + '\'' +
+                ",\n\tphoto\t= '" + photo + '\'' +
+                "\n}";
     }
 
-    public User toUser(String jsonString) {
-        return this;
+    public User toUser(String jsonString) throws BadKeyException {
+        try {
+            jsonString = jsonString.replace("\"", "") + "}";
+            this.id = Integer.parseInt(getValue("id:", jsonString));
+            this.name = getValue("name:", jsonString);
+            this.company = getValue("company:", jsonString);
+            this.username = getValue("username:", jsonString);
+            this.address = getValue("address:", jsonString);
+            this.zip = getValue("zip:", jsonString);
+            this.state = getValue("state:", jsonString);
+            this.country = getValue("country:", jsonString);
+            this.phone = getValue("phone:", jsonString);
+            this.photo = getValue("photo:", jsonString);
+            return this;
+        }
+        catch (Exception e) {
+            throw new BadKeyException("Невозможно распарсить json");
+        }
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setCompany(String company) {
-        this.company = company;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public void setZip(String zip) {
-        this.zip = zip;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
+    private String getValue(String key, String json) {
+        int start = json.indexOf(key) + key.length();
+        int end = json.indexOf(",", start);
+        if (end == -1)
+            end = json.indexOf("}", start);
+        return json.substring(start, end).trim();
     }
 }
